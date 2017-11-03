@@ -16,8 +16,11 @@ function processBlock(blk) {
     var format = "svg";
     if (config && config.format)
         format = config.format;
+	var engine = "dot";
+    if (config && config.engine)
+        engine = config.engine;
 
-	var result = vizjs(code, { format: format, engine: "dot"})
+	var result = vizjs(code, { format: format, engine: engine})
     deferred.resolve(result);
     return deferred.promise;
 }
