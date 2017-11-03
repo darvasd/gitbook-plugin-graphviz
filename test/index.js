@@ -46,7 +46,7 @@ describe('graphviz', function() {
             .create()
             .then(function(result) {
 				console.log(result[0].content)
-                assert.equal(result[0].content, expectedSvg)
+                assert.equal(result[0].content.replace(/\n/g,''), expectedSvg)
             });
     });
     /*it('should correctly replace by ```pgraphviz``` tag', function() {
