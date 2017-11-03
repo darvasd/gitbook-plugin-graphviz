@@ -1,0 +1,144 @@
+var path = require('path');
+var spawn = require('child_process').spawn;
+var fs = require('fs-extra');
+var crypto = require('crypto');
+var Q = require('q');
+var vizjs = require('viz.js');
+
+var nailgunRunning = false;
+
+var ASSET_PATH = 'assets/images/graphviz/';
+
+function processBlock(blk) {
+    var deferred = Q.defer();
+    var book = this;
+    var code;
+	
+    if (!!blk.kwargs.src) {
+        code = fs.readFileSync(blk.kwargs.src , "utf8");
+    } else {
+        code = blk.body;
+    }
+
+    var config = book.config.get('pluginsConfig.graphviz', {});
+
+    if (blk.kwargs['config']) {
+        config = blk.kwargs['config'];
+    }
+
+    var format = "png";
+    if (config && config.format)
+        format = config.format;
+
+    var assetPath = ASSET_PATH;
+    var filePath = assetPath + crypto.createHash('sha1').update(code).digest('hex') + '.' + format;
+
+	var result = "-- GraphViz should come here --";
+    deferred.resolve(result);
+	
+    /*if (fs.existsSync(filePath)) {
+        var result = "<img src=/" + filePath + ">";
+        deferred.resolve(result);
+    } else {
+        //var gen = plantuml.generate(code, config); // TODO
+
+        var chunks = [];
+        gen.out.on('data', function(chunk) {
+            chunks.push(chunk)
+        })
+        gen.out.on('end', function() {
+            var buffer = Buffer.concat(chunks)
+            fs.mkdirpSync(assetPath);
+
+            fs.writeFile(filePath, buffer, (err) => {
+                if (err)
+                  console.error(err);
+            });
+
+            var result = "<img src=/" + filePath + ">";
+            deferred.resolve(result);
+        })
+    }*/
+    return deferred.promise;
+}
+
+module.exports = {
+    blocks: {
+        graphviz: {
+            process: processBlock
+        }
+    },
+    hooks: {
+        // For all the hooks, this represent the current generator
+        // [init", "finish", "finish:before", "page", "page:before"] are working.
+        // page:* are marked as deprecated because it's better if plugins start using blocks instead.
+        // But page and page:before will probably stay at the end (useful in some cases).
+
+        // This is called before the book is generated
+        "init": function() {
+            if (!Object.keys(this.book.config.get('pluginsConfig.graphviz', {})).length) {
+                this.book.config.set('pluginsConfig.graphviz', {
+                    format: 'png'
+                });
+            }
+            //var startNailgun = this.book.config.get('pluginsConfig.uml.nailgun', false);
+            //if (startNailgun && !nailgunRunning) {
+            //    plantuml.useNailgun(function() {
+            //        nailgunRunning = true;
+            //    });
+            //}
+        },
+
+        // This is called after the book generation
+        "finish": function() {
+            // Done
+        },
+
+        // Before the end of book generation
+        "finish:before": function() {
+            // Copy images to output folder every time
+            var book = this;
+            var output = book.output;
+            var rootPath = output.root();
+            if (fs.existsSync(ASSET_PATH)) {
+                fs.mkdirs(path.join(rootPath, ASSET_PATH));
+                // fs.copy(ASSET_PATH, path.join(rootPath, ASSET_PATH), {
+                //     clobber: true
+                // }, function(err) {
+                //     if (err)
+                //         console.error(err)
+                // })
+                fs.copySync(ASSET_PATH, path.join(rootPath, ASSET_PATH));
+            }
+        },
+
+        // The following hooks are called for each page of the book
+        // and can be used to change page content (html, data or markdown)
+
+
+        // Before parsing documents
+        "page:before": function(page) {
+            // Get all code texts
+            umls = page.content.match(/^```dot((.*[\r\n]+)+?)?```$/igm);
+            // Begin replace
+            if (umls instanceof Array) {
+                for (var i = 0, len = umls.length; i < len; i++) {
+                    page.content = page.content.replace(
+                        umls[i],
+                        umls[i].replace(/^```dot/, '{% graphviz %}').replace(/```$/, '{% endgraphviz %}'));
+                }
+            }
+            // Get all code texts
+            umls = page.content.match(/^```graphviz((.*[\r\n]+)+?)?```$/igm);
+            // Begin replace
+            if (umls instanceof Array) {
+                for (var i = 0, len = umls.length; i < len; i++) {
+                    page.content = page.content.replace(
+                        umls[i],
+                        umls[i].replace(/^```graphviz/, '{% graphviz %}').replace(/```$/, '{% endgraphviz %}'));
+                }
+            }
+            return page;
+        }
+    }
+};

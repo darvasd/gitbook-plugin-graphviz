@@ -1,0 +1,49 @@
+{
+  "author": {
+    "name": "Daniel Darvas"
+  },
+  "bugs": {
+    "url": "https://github.com/darvasd/gitbook-plugin-graphviz/issues"
+  },
+  "dependencies": {
+    "fs-extra": "^4.0.1",
+    "crypto": "^1.0.1",
+    "q": "^1.5.0",
+    "viz.js": "^1.8.0"
+  },
+  "description": "Graphviz plugin for GitBook",
+  "devDependencies": {
+    "gitbook-tester": "^1.4.3",
+    "mocha": "^3.5.0"
+  },
+  "directories": {},
+  "engines": {
+    "gitbook": "*"
+  },
+  "homepage": "https://github.com/darvasd/gitbook-plugin-graphviz",
+  "keywords": [
+    "diagrams",
+    "graphviz",
+	"dot",
+    "plugin",
+    "gitbook"
+  ],
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "email": "darvas.daniel@gmail.com",
+      "name": "Daniel Darvas"
+    }
+  ],
+  "name": "gitbook-plugin-graphviz",
+  "optionalDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darvasd/gitbook-plugin-graphviz.git"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/mocha --reporter spec --timeout 15000"
+  },
+  "version": "0.0.1"
+}
