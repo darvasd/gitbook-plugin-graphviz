@@ -51,7 +51,6 @@ module.exports = {
         // Before the end of book generation
         "finish:before": function() {
 			// Nothing to do
-            }
         },
 
         // The following hooks are called for each page of the book
