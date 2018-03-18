@@ -28,13 +28,13 @@ Configure the plugin in `book.json`.
 
 ```
 "plugins": [
-		"graphviz@git+https://github.com/darvasd/gitbook-plugin-graphviz.git"
-    ],
+      "graphviz@git+https://github.com/darvasd/gitbook-plugin-graphviz.git"
+  ],
 "pluginsConfig": {
-  "uml": {
-    "format": "svg",
-    "engine": "dot"
-  }
+    "graphviz": {
+        "format": "svg",
+        "engine": "dot"
+    }
 }
 ``` 
 

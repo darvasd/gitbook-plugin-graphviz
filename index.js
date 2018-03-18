@@ -16,11 +16,11 @@ function processBlock(blk) {
     var format = "svg";
     if (config && config.format)
         format = config.format;
-	var engine = "dot";
+    var engine = "dot";
     if (config && config.engine)
         engine = config.engine;
 
-	var result = vizjs(code, { format: format, engine: engine})
+    var result = vizjs(code, { format: format, engine: engine})
     deferred.resolve(result);
     return deferred.promise;
 }
@@ -53,7 +53,7 @@ module.exports = {
 
         // Before the end of book generation
         "finish:before": function() {
-			// Nothing to do
+            // Nothing to do
         },
 
         // The following hooks are called for each page of the book
