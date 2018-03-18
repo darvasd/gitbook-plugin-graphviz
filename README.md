@@ -1,6 +1,8 @@
 # gitbook-plugin-graphviz
 Graphviz support for GitBook
 
+[![Build Status](https://travis-ci.org/darvasd/gitbook-plugin-graphviz.svg?branch=master)](https://travis-ci.org/darvasd/gitbook-plugin-graphviz)
+
 Based on [vowstar/gitbook-plugin-uml](https://github.com/vowstar/gitbook-plugin-uml) and [viz.js](https://www.npmjs.com/package/viz.js).
 
 ## Usage
